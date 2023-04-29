@@ -15,7 +15,7 @@ const io = new Server(http,{
 });
 const client = mqtt.connect('mqtt://io.adafruit.com', {
   username: 'PhucHo123',
-  password: 'aio_AoPz05HKIPs0c2QGpUMldKkGCrTc',
+  password: 'aio_UmMp89tirxTRtNmHylPj57udgFaR',
 });
 
 client.on('connect', () => {
@@ -27,12 +27,21 @@ client.on('error', (err) => {
 });
 
 client.on('message', (topic, message) => {
-  console.log('Received message:', message.toString());
-  io.emit('ack',message.toString());
+  console.log('Received message:', topic," - ",message.toString());
+  if(topic=="PhucHo123/feeds/ack") io.emit('ack',message.toString());
+  else if(topic == "PhucHo123/feeds/adc1") io.emit("adc1",message.toString());
+  else if(topic == "PhucHo123/feeds/adc2") io.emit("adc2",message.toString());
+  else if(topic == "PhucHo123/feeds/image-detector") io.emit("image-detector",message.toString());
+  else if(topic == "PhucHo123/feeds/button1") io.emit("button1",message.toString());
+  else if(topic == "PhucHo123/feeds/button2") io.emit("button2",message.toString());
 });
 
 client.subscribe('PhucHo123/feeds/ack');
-
+client.subscribe('PhucHo123/feeds/adc1');
+client.subscribe('PhucHo123/feeds/adc2');
+client.subscribe('PhucHo123/feeds/image-detector');
+client.subscribe('PhucHo123/feeds/button1');
+client.subscribe('PhucHo123/feeds/button2');
 // client.publish(
 //   '<username>/feeds/<feedname>',
 //   'Hello, Adafruit IO from Node.js!',

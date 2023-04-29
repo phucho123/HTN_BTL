@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react'
 import { Spin } from 'antd';
-import * as api from '../api';
+import * as api from '../Controller/api';
 import io from 'socket.io-client';
 
 const socket = io.connect('http://localhost:3001');
@@ -14,7 +14,14 @@ const Switch = React.memo(function ({feed}) {
                 setLoading(false);
             }
         });
-    },[]);
+        socket.on(feed,(data) => {
+            if(data === "1"){
+                document.getElementById(feed).checked = true;
+            }else if(data === "0"){
+                document.getElementById(feed).checked = false;
+            }
+        })
+    },[feed]);
     useEffect(() => {
         const fetchData = async() => {
             const data = await api.get({feed:feed});

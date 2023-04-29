@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <HeaderStyled>
         <Col span={24} style={{borderBottom:'1px solid white', backgroundColor:'white'}}>
-            <Title level={1} style={{color:'black', margin: 20}}>MY IOT DASHBOARD</Title>
+            <Title level={1} style={{color:'black', margin: 20,textAlign:"center"}}>MY IOT DASHBOARD</Title>
         </Col>
         {/* <Col style={{display:"flex",alignItems:"center"}}>
             <Avatar style={{backgroundColor:'gray', marginRight: 10}} size={50}>H</Avatar>
