@@ -4,18 +4,21 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const { Server } = require('socket.io');
+const dotenv = require("dotenv");
+dotenv.config();
+
 
 app.use(cors);
 
-const io = new Server(http,{
+const io = new Server(http, {
   cors: {
-    origin:"http://localhost:3000",
-    methods: ["GET","POST"]
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
   }
 });
 const client = mqtt.connect('mqtt://io.adafruit.com', {
-  username: 'PhucHo123',
-  password: 'aio_UmMp89tirxTRtNmHylPj57udgFaR',
+  username: process.env.ADAFRUIT_USER,
+  password: process.env.ADAFRUIT_KEY,
 });
 
 client.on('connect', () => {
@@ -27,21 +30,21 @@ client.on('error', (err) => {
 });
 
 client.on('message', (topic, message) => {
-  console.log('Received message:', topic," - ",message.toString());
-  if(topic=="PhucHo123/feeds/ack") io.emit('ack',message.toString());
-  else if(topic == "PhucHo123/feeds/adc1") io.emit("adc1",message.toString());
-  else if(topic == "PhucHo123/feeds/adc2") io.emit("adc2",message.toString());
-  else if(topic == "PhucHo123/feeds/image-detector") io.emit("image-detector",message.toString());
-  else if(topic == "PhucHo123/feeds/button1") io.emit("button1",message.toString());
-  else if(topic == "PhucHo123/feeds/button2") io.emit("button2",message.toString());
+  console.log('Received message:', topic, " - ", message.toString());
+  // if (topic == "lexuanbach/feeds/ack") io.emit('ack', message.toString());
+  if (topic == "lexuanbach/feeds/project-iot.auto") io.emit("auto", message.toString());
+  else if (topic == "lexuanbach/feeds/project-iot.fan") io.emit("fan", message.toString());
+  // else if (topic == "lexuanbach/feeds/image-detector") io.emit("image-detector", message.toString());
+  else if (topic == "lexuanbach/feeds/project-iot.humidity") io.emit("humidity", message.toString());
+  else if (topic == "lexuanbach/feeds/project-iot.temperature") io.emit("temperature", message.toString());
 });
 
-client.subscribe('PhucHo123/feeds/ack');
-client.subscribe('PhucHo123/feeds/adc1');
-client.subscribe('PhucHo123/feeds/adc2');
-client.subscribe('PhucHo123/feeds/image-detector');
-client.subscribe('PhucHo123/feeds/button1');
-client.subscribe('PhucHo123/feeds/button2');
+// client.subscribe('lexuanbach/feeds/ack');
+client.subscribe('lexuanbach/feeds/project-iot.auto');
+client.subscribe('lexuanbach/feeds/project-iot.fan');
+// client.subscribe('PhucHo123/feeds/image-detector');
+client.subscribe('lexuanbach/feeds/project-iot.humidity');
+client.subscribe('lexuanbach/feeds/project-iot.temperature');
 // client.publish(
 //   '<username>/feeds/<feedname>',
 //   'Hello, Adafruit IO from Node.js!',
@@ -66,6 +69,6 @@ io.on('connection', (socket) => {
   // });
 });
 
-http.listen(3001,() => {
-    console.log("listen on port 3001");
+http.listen(3001, () => {
+  console.log("listen on port 3001");
 })
